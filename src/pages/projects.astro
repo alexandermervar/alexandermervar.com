@@ -5,13 +5,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout title="Projects — Alexander Mervar" description="Projects and work by Alexander Mervar">
   <h1>Projects</h1>
 
+  <p>I studied Cognitive Science (B.S.) at Indiana University Bloomington, with a minor in Business. IU's program sits at the intersection of psychology, computer science, neuroscience, linguistics, and philosophy — the shared question being how minds, both biological and artificial, work. What follows is a mix of personal projects, tools I built at work, and code from that coursework.</p>
+
   <h2>Sites</h2>
   <ul class="post-list">
     <li>
       <p class="post-title">
         <a href="https://oscars.alexandermervar.com" target="_blank" rel="noopener">Oscars Party</a>
       </p>
-      <p class="post-description">A ballot and viewing guide I build each year for an Oscars party. Guests fill out their predictions before the ceremony and we score them live. Rebuilt annually as the nominees change.</p>
+      <p class="post-description">A ballot and scoring site I rebuild each year for an Oscars party. Guests fill out predictions before the ceremony across every major category, and we score them live as the awards are announced. Rebuilt annually around the current year's nominees.</p>
     </li>
   </ul>
 
@@ -21,72 +23,78 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p class="post-title">
         <a href="https://github.com/alexandermervar/hal-1000" target="_blank" rel="noopener">HAL-1000</a>
       </p>
-      <p class="post-description">A Raspberry Pi project. Named after the fictional AI from <em>2001: A Space Odyssey</em>.</p>
+      <p class="post-description">A Raspberry Pi project. A small single-board computer that runs Linux and can be programmed for anything from home automation to media servers to physical computing. Named after HAL 9000, the fictional AI from <em>2001: A Space Odyssey</em>.</p>
     </li>
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/PIEthon-2.0" target="_blank" rel="noopener">PIEthon 2.0</a>
       </p>
-      <p class="post-description">A Python tool for pulling reports and exporting datasets out of Indiana University's Pie TCC platform. A full rewrite of an earlier version originally built by Brian Funk at TCC UITS.</p>
+      <p class="post-description">A Python tool for pulling reports and exporting datasets from Indiana University's Pie TCC platform, used by the student technology support center. A full rewrite of an earlier version originally built by Brian Funk — cleaner code, better error handling, and updated for the API changes that broke the original. Built during my time working at TCC UITS.</p>
     </li>
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/automatedCSSetup" target="_blank" rel="noopener">Automated CS Setup</a>
       </p>
-      <p class="post-description">A Python script that automates the process of opening the specific set of web tools used by UITS staff at Indiana University's TCC. Cuts down on repetitive startup steps at the beginning of each shift.</p>
+      <p class="post-description">A Python script that opens the specific set of internal web tools needed at the start of every shift at TCC UITS. A small thing, but it eliminated a repetitive manual task that every new consultant had to learn and do by hand each time they sat down.</p>
     </li>
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/C211-Grading-Algorithm" target="_blank" rel="noopener">C211 Grading Algorithm</a>
       </p>
-      <p class="post-description">A small Jupyter notebook for grading student code submissions in CSCI-C211 (Introduction to Computer Science) at Indiana University. Applies a consistent rubric so scores don't drift across a large batch of submissions.</p>
+      <p class="post-description">A Jupyter notebook for grading student code submissions in CSCI-C211 (Introduction to Computer Science) at Indiana University, where I worked as an associate instructor. Applies a consistent rubric programmatically so scores don't drift when working through a large batch of submissions.</p>
     </li>
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/optimalstop" target="_blank" rel="noopener">Optimal Stop</a>
       </p>
-      <p class="post-description">A Python implementation of the optimal stopping problem — the mathematical strategy for knowing when to commit to a choice after evaluating options in sequence. Also known as the secretary problem.</p>
+      <p class="post-description">A Python implementation of the optimal stopping problem — the mathematical framework for knowing when to commit to a choice after evaluating options in sequence. Also called the secretary problem or the marriage problem. The classic result is the 37% rule: evaluate the first 37% of options without choosing, then pick the next one that beats everything you've seen so far.</p>
     </li>
   </ul>
 
   <h2>Coursework</h2>
-  <p>Academic work from Indiana University, kept public for reference.</p>
+  <p>Code and notebooks from IU's Cognitive Science program, kept public. The B.S. track in Cognitive Science requires substantial work in computation, statistics, and formal methods alongside the core cognitive science sequence — so much of this is more technical than the course titles suggest.</p>
+
+  <h3>Core courses with repositories</h3>
   <ul class="post-list">
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/cogs-q320" target="_blank" rel="noopener">COGS-Q 320 — Computation in Cognitive Science</a>
       </p>
-      <p class="post-description">Notebooks and assignments exploring how computational models are used to study cognition. Covers topics like simulation, data analysis, and cognitive architectures using Python and Jupyter.</p>
+      <p class="post-description">One of the more distinctive courses in IU's program. Treats computation not just as a tool but as a framework for understanding cognition itself — the idea, going back to Turing and Newell & Simon, that thinking might be a form of information processing that can be modeled computationally. Assignments used Python and Jupyter to build simulations of cognitive processes: memory models, attention, decision-making. Also covered agent-based modeling and the basics of how researchers use computational models to generate testable predictions about behavior.</p>
+    </li>
+    <li>
+      <p class="post-title">
+        <a href="https://github.com/alexandermervar/cogs-q351" target="_blank" rel="noopener">COGS-Q 351 — Introduction to Artificial Intelligence &amp; Computer Simulation</a>
+      </p>
+      <p class="post-description">Covers the classical foundations of AI — search algorithms (breadth-first, depth-first, A*), knowledge representation, logic-based reasoning, and planning — and connects them to cognitive science questions about how intelligent behavior can be modeled and simulated. Distinct from a standard CS AI course in that it keeps asking what these techniques tell us about natural intelligence, not just how to engineer artificial versions of it. Python throughout.</p>
+    </li>
+    <li>
+      <p class="post-title">
+        <a href="https://github.com/alexandermervar/cogs-q355" target="_blank" rel="noopener">COGS-Q 355 — Neural Networks and the Brain</a>
+      </p>
+      <p class="post-description">Bridges connectionism and deep learning — the two traditions that both try to understand intelligence through networks of simple units. Starts from the biological neuron and the perceptron, covers backpropagation and gradient descent, and builds up to modern deep learning architectures: convolutional networks for vision, recurrent networks for sequence data. A recurring theme is the tension between networks that perform well and networks that are actually plausible as models of how the brain works. IU's program highlights this as one of its featured courses.</p>
+    </li>
+    <li>
+      <p class="post-title">
+        <a href="https://github.com/alexandermervar/cogs-q370" target="_blank" rel="noopener">COGS-Q 370 — Experiments and Models in Cognition</a>
+      </p>
+      <p class="post-description">The methodology course for the major. Covers how cognitive scientists design experiments, collect behavioral data, and build mathematical models to explain what they find. R is the primary tool — statistical modeling, data visualization, and model comparison (comparing how well different theoretical accounts fit the same data). Also covers signal detection theory, Bayesian approaches to inference, and the replication crisis in psychology. IU highlights this as a featured course in the program.</p>
     </li>
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/psychopy-tutorial" target="_blank" rel="noopener">PsychoPy Tutorial</a>
       </p>
-      <p class="post-description">A tutorial built for COGS-Q 320 introducing PsychoPy, a Python library for running psychology experiments. Covers stimulus presentation, response collection, and timing.</p>
+      <p class="post-description">A tutorial built for COGS-Q 320 on PsychoPy, a Python library for running psychology experiments. Covers stimulus presentation, response timing, and data collection — the infrastructure that underlies most laboratory cognitive experiments. PsychoPy is widely used in academic research because it gives precise control over timing and display in a way that web-based tools can't match.</p>
     </li>
-    <li>
-      <p class="post-title">
-        <a href="https://github.com/alexandermervar/cogs-q351" target="_blank" rel="noopener">COGS-Q 351</a>
-      </p>
-      <p class="post-description">Coursework in cognitive science. Python.</p>
-    </li>
-    <li>
-      <p class="post-title">
-        <a href="https://github.com/alexandermervar/cogs-q355" target="_blank" rel="noopener">COGS-Q 355</a>
-      </p>
-      <p class="post-description">Coursework in cognitive science.</p>
-    </li>
-    <li>
-      <p class="post-title">
-        <a href="https://github.com/alexandermervar/cogs-q370" target="_blank" rel="noopener">COGS-Q 370</a>
-      </p>
-      <p class="post-description">Coursework in cognitive science. Statistical analysis in R.</p>
-    </li>
+  </ul>
+
+  <h3>Other coursework</h3>
+  <ul class="post-list">
     <li>
       <p class="post-title">
         <a href="https://github.com/alexandermervar/csci-c212_FinalProject" target="_blank" rel="noopener">CSCI-C212 Final Project</a>
       </p>
-      <p class="post-description">Final project for Introduction to Software Systems, built with Aidan Rosberg. Java.</p>
+      <p class="post-description">Final project for Introduction to Software Systems at IU, built with Aidan Rosberg. C212 is the second course in IU's CS sequence — object-oriented programming in Java, data structures, and software design. This is the capstone from that course.</p>
     </li>
   </ul>
 

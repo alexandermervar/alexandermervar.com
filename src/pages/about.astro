@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About — Alexander Mervar" description="About Alexander Mervar — developer, writer, and cognitive science graduate from Indiana University.">
+  <h1>About</h1>
+
+  <figure class="about-photo">
+    <img src="/images/about.jpg" alt="Alexander Mervar, outdoors on a sunny day" />
+  </figure>
+
+  <p>I'm Alexander Mervar — a developer, writer, and curious person based in the Midwest.</p>
+
+  <p>I studied <a href="https://cogs.indiana.edu" target="_blank" rel="noopener">Cognitive Science (B.S.)</a> at Indiana University Bloomington, with a minor in Business, graduating with a 3.77 GPA. Cognitive science is an inherently strange discipline — it draws on computer science, psychology, neuroscience, linguistics, and philosophy, held together by the question of what minds are and how they work. I found that useful. It gave me a way to think about technical problems that isn't purely technical, and a way to think about human problems that takes computation seriously.</p>
+
+  <p>At IU I worked at the <a href="https://tcc.uits.iu.edu" target="_blank" rel="noopener">Technology Center Consultants</a> within UITS — the student technology support operation — where I built internal tools to make the day-to-day work faster and less repetitive. I also served as an Associate Instructor for CSCI-C211 (Introduction to Computer Science), which is where I developed an appreciation for how hard it is to explain something clearly. Over four semesters I did independent research through the COGS-X 497 program in the Cognitive and Information Sciences lab.</p>
+
+  <p>Outside of that I've spent time on personal projects: a Raspberry Pi setup I've been building out, an annual Oscars party site that I rebuild each year around the nominees, and this blog, which I started because writing is the best way I know to figure out what I actually think about something.</p>
+
+  <h2>Interests</h2>
+
+  <p>I watch a lot of films and log them on <a href="https://letterboxd.com/macDoofOS/" rel="me noopener" target="_blank">Letterboxd</a>. I'm interested in how people talk about movies — the gap between what a film is doing and what people think it's doing — which probably connects back to the cognitive science training in ways I haven't fully worked out.</p>
+
+  <p>I'm interested in AI in the way that someone who studied it before it became a daily news story tends to be: cautiously, with a lot of caveats, and more interested in the unsolved problems than the benchmarks. The IU program pushed hard on the question of whether current AI systems actually model cognition or just approximate its outputs — that question still feels unresolved and important.</p>
+
+  <p>I'm also interested in the web as a medium. This site is built to last: static HTML, no JavaScript, no tracking, no dependencies that can break. It'll render the same in 2035 as it does today. That's a feature.</p>
+
+  <h2>Get in touch</h2>
+
+  <p>The best way to reach me is by email: <a href="mailto:alexandermervar@gmail.com">alexandermervar@gmail.com</a>. I'm also on <a href="https://hachyderm.io/@macDoofOS" rel="me noopener" target="_blank">Mastodon</a>.</p>
+</BaseLayout>
+
+<style>
+  .about-photo {
+    margin: 0 0 2rem;
+    padding: 0;
+  }
+
+  .about-photo img {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    display: block;
+    border: 1px solid var(--rule);
+  }
+</style>

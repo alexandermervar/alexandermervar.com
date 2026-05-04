@@ -1,10 +1,65 @@
+/*
+ * Style guide — alexandermervar.com
+ *
+ * Palette (all pass WCAG AA at normal text sizes)
+ *   --ink:       #1a1a1a   primary text       contrast vs white: 16.7:1
+ *   --ink-muted: #595959   secondary text     contrast vs white:  7.0:1
+ *   --rule:      #d0d0d0   borders & rules
+ *   --paper:     #ffffff   page background
+ *
+ * Typefaces
+ *   Body:    Georgia, serif   — warm, editorial, newspaper feel
+ *   UI:      system-ui, sans-serif — nav, labels, meta
+ *
+ * Principles
+ *   - Links are always underlined in body text. No exceptions.
+ *   - No color for decoration. Color is only used to communicate.
+ *   - Every interactive element has a visible :focus-visible style.
+ *   - No rounded corners, no shadows, no gradients.
+ */
+
 /* -----------------------------------------------
-   Base reset & typography
+   Custom properties
+----------------------------------------------- */
+:root {
+  --ink:       #1a1a1a;
+  --ink-muted: #595959;
+  --rule:      #d0d0d0;
+  --paper:     #ffffff;
+  --font-body: Georgia, 'Times New Roman', serif;
+  --font-ui:   system-ui, -apple-system, sans-serif;
+}
+
+/* -----------------------------------------------
+   Reset
 ----------------------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
+/* -----------------------------------------------
+   Skip link (accessibility — keyboard users)
+----------------------------------------------- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* -----------------------------------------------
+   Base
+----------------------------------------------- */
 html {
   font-size: 18px;
   -webkit-text-size-adjust: 100%;
@@ -13,10 +68,18 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: Georgia, 'Times New Roman', serif;
-  background: #fff;
-  color: #1a1a1a;
-  line-height: 1.7;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.75;
+}
+
+/* -----------------------------------------------
+   Focus styles — visible for all keyboard users
+----------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
 /* -----------------------------------------------
@@ -25,99 +88,131 @@ body {
 .container {
   max-width: 680px;
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: 0 1.25rem 3rem;
 }
 
 /* -----------------------------------------------
-   Navigation
+   Masthead / Navigation
 ----------------------------------------------- */
+.site-header {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.85rem 0;
+  margin-bottom: 3rem;
+}
+
 nav {
   display: flex;
   gap: 1.5rem;
-  margin-bottom: 3rem;
-  font-family: system-ui, sans-serif;
-  font-size: 0.9rem;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 nav a {
-  color: #555;
+  color: var(--ink);
   text-decoration: none;
+  font-weight: 500;
 }
 
 nav a:hover {
-  color: #000;
   text-decoration: underline;
+}
+
+nav a:focus-visible {
+  outline-offset: 4px;
 }
 
 /* -----------------------------------------------
    Typography
 ----------------------------------------------- */
-h1, h2, h3 {
-  font-family: system-ui, sans-serif;
-  font-weight: 600;
-  line-height: 1.25;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
+h1, h2, h3, h4 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-top: 2.5rem;
+  margin-bottom: 0.6rem;
 }
 
-h1 { font-size: 1.8rem; }
-h2 { font-size: 1.35rem; }
-h3 { font-size: 1.1rem; }
-
-p { margin: 0 0 1.25rem; }
-
-a {
-  color: #0066cc;
-  text-decoration: underline;
+h1 {
+  font-size: 1.9rem;
+  margin-top: 0;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.6rem;
+  margin-bottom: 1.5rem;
 }
 
-a:hover { color: #004499; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.05rem; }
+
+p {
+  margin: 0 0 1.25rem;
+}
 
 /* -----------------------------------------------
-   Blog post list
+   Links — always underlined in body text
+----------------------------------------------- */
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* -----------------------------------------------
+   Post list (blog + projects)
 ----------------------------------------------- */
 .post-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 1.5rem;
 }
 
 .post-list li {
   padding: 1.25rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--rule);
 }
 
-.post-list li:last-child {
-  border-bottom: none;
+.post-list li:first-child {
+  border-top: 1px solid var(--rule);
 }
 
 .post-meta {
-  font-family: system-ui, sans-serif;
-  font-size: 0.85rem;
-  color: #888;
-  margin-bottom: 0.25rem;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin: 0 0 0.2rem;
+  letter-spacing: 0.01em;
 }
 
 .post-title {
-  font-family: system-ui, sans-serif;
-  font-size: 1.15rem;
+  font-family: var(--font-ui);
+  font-size: 1.1rem;
   font-weight: 600;
-  margin: 0 0 0.3rem;
+  margin: 0 0 0.35rem;
 }
 
 .post-title a {
-  color: #1a1a1a;
-  text-decoration: none;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .post-title a:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 .post-description {
   font-size: 0.95rem;
-  color: #444;
+  color: var(--ink-muted);
   margin: 0;
+  font-family: var(--font-body);
+  line-height: 1.5;
 }
 
 /* -----------------------------------------------
@@ -131,25 +226,56 @@ a:hover { color: #004499; }
 }
 
 .tag {
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-ui);
   font-size: 0.75rem;
-  background: #f0f0f0;
-  color: #555;
-  padding: 0.15rem 0.5rem;
-  border-radius: 3px;
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--rule);
+  padding: 0.1rem 0.45rem;
 }
 
 /* -----------------------------------------------
-   Article body
+   Article body (individual blog posts)
 ----------------------------------------------- */
 article .post-header {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--rule);
 }
 
 article .post-header h1 {
-  margin-top: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0.5rem;
+}
+
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem 0;
+  border: 1px solid var(--rule);
+}
+
+article figcaption {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Footnotes (generated by Astro's markdown renderer) */
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+.footnotes ol {
+  padding-left: 1.25rem;
 }
 
 /* -----------------------------------------------
@@ -157,13 +283,27 @@ article .post-header h1 {
 ----------------------------------------------- */
 footer {
   margin-top: 4rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee;
-  font-family: system-ui, sans-serif;
-  font-size: 0.85rem;
-  color: #888;
+  padding-top: 1.25rem;
+  border-top: 3px solid var(--ink);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
 }
 
 footer a {
-  color: #888;
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+footer a:hover {
+  color: var(--ink);
+}
+
+/* -----------------------------------------------
+   Responsive
+----------------------------------------------- */
+@media (max-width: 480px) {
+  html { font-size: 16px; }
+  h1   { font-size: 1.6rem; }
 }

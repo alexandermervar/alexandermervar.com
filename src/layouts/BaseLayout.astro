@@ -40,15 +40,20 @@ const siteUrl = 'https://alexandermervar.com';
     <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <div class="container">
-      <nav>
-        <a href="/">Home</a>
-        <a href="/blog">Blog</a>
-        <a href="/projects">Projects</a>
-        <a href="/rss.xml">RSS</a>
-      </nav>
+      <header class="site-header">
+        <nav aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="/blog">Blog</a>
+          <a href="/projects">Projects</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </header>
+      <main id="main">
 
       <slot />
+      </main>
 
       <footer>
         <p>

@@ -1,6 +1,133 @@
 # alexandermervar.com
 
-My personal site — a blog and podcast feed built with [Astro](https://astro.build), deployed on [Netlify](https://netlify.com), served at a domain registered through [Hover](https://hover.com), and version-controlled here on GitHub. This README is written to explain every piece of the stack in plain English, so future-me (or anyone curious) can understand what's going on and why.
+My personal site — a blog and podcast feed built with [Astro](https://astro.build), deployed on [Netlify](https://netlify.com), served at a domain registered through [Hover](https://hover.com), and version-controlled here on GitHub.
+
+---
+
+## Things you'll do all the time
+
+These are the three things you'll do repeatedly. Everything else in this README is background knowledge.
+
+---
+
+### Write a blog post
+
+1. Create a new file in `src/content/blog/`. Name it whatever you want the URL to be — `my-post.md` becomes `/blog/my-post`.
+
+2. Paste this at the top and fill it in:
+
+```markdown
+---
+title: "Your Post Title"
+description: "One sentence. Shows up in listings and the RSS feed."
+pubDate: 2026-05-03
+tags: ["tag-one", "tag-two"]
+draft: false
+---
+
+Your post goes here. Write in plain **Markdown**.
+```
+
+3. Write below the second `---`. Everything there is your post body.
+
+4. Set `draft: true` while you're still writing — it won't appear anywhere on the site until you change it to `false`.
+
+5. When you're ready to publish:
+
+```bash
+cd ~/Projects/alexandermervar.com
+git add src/content/blog/your-post.md
+git commit -m "post: your post title"
+git push
+```
+
+Netlify picks it up automatically. The site rebuilds in about 60 seconds and your post is live.
+
+**What Markdown looks like:**
+
+```markdown
+# Heading
+
+Regular paragraph text. **Bold**, *italic*, `inline code`.
+
+[Link text](https://example.com)
+
+- Bullet one
+- Bullet two
+
+> Blockquote
+
+---   ← horizontal rule
+```
+
+---
+
+### Publish a podcast episode
+
+1. Put your MP3 in `public/podcast/` — or upload it somewhere like [Backblaze B2](https://www.backblaze.com/cloud-storage) if you'd rather not store audio in the repo.
+
+2. Right-click the MP3 → Get Info → note the size in bytes.
+
+3. Create a new file in `src/content/podcast/`. Name it anything — `episode-2.json`:
+
+```json
+{
+  "title": "Episode 2 — Your Topic",
+  "description": "What this episode is about.",
+  "pubDate": "2026-05-03",
+  "audioUrl": "https://alexandermervar.com/podcast/episode-2.mp3",
+  "duration": "32:15",
+  "fileSize": 46137344
+}
+```
+
+`duration` can be `MM:SS` or `HH:MM:SS`. `fileSize` is the number you got from Get Info, in bytes.
+
+4. Push it:
+
+```bash
+git add src/content/podcast/episode-2.json public/podcast/episode-2.mp3
+git commit -m "podcast: episode 2"
+git push
+```
+
+The podcast feed at `/podcast.xml` updates automatically on the next deploy.
+
+---
+
+### Deploy (how pushing works)
+
+Every `git push` to `main` triggers a Netlify rebuild. You don't do anything else.
+
+```
+git add .
+git commit -m "describe what you changed"
+git push
+```
+
+That's it. Watch it build at [app.netlify.com](https://app.netlify.com) if you're curious. Live in ~60 seconds.
+
+---
+
+### Run the site locally (optional)
+
+If you want to preview before pushing:
+
+```bash
+cd ~/Projects/alexandermervar.com
+npm install        # first time only
+npm run dev
+```
+
+Open `http://localhost:4321`. Changes you make to any file reload instantly.
+
+---
+
+---
+
+## The rest — what everything is and why
+
+The sections below explain the full stack in detail. You don't need to read them to use the site, but they're here so you understand what's actually happening.
 
 ---
 
@@ -17,11 +144,7 @@ My personal site — a blog and podcast feed built with [Astro](https://astro.bu
    - [Hover (domain registrar)](#hover-domain-registrar)
    - [DNS — how the domain points to Netlify](#dns--how-the-domain-points-to-netlify)
 3. [Project structure](#project-structure)
-4. [How to run it locally](#how-to-run-it-locally)
-5. [How to write a blog post](#how-to-write-a-blog-post)
-6. [How to publish a podcast episode](#how-to-publish-a-podcast-episode)
-7. [How deploys work](#how-deploys-work)
-8. [Things to fill in](#things-to-fill-in)
+4. [Things to fill in](#things-to-fill-in)
 
 ---
 
@@ -167,7 +290,7 @@ The `.gitignore` file lists things that should *not* be committed:
 
 [Hover](https://hover.com) is where the domain `alexandermervar.com` is registered. A **domain registrar** is a company that holds the lease on your domain name. You pay them annually to keep the rights to the domain. Hover is well regarded for having a clean interface and not upselling you on things you don't need.
 
-The registrar controls **where DNS queries for your domain go** — specifically, which **nameservers** are authoritative for it. By default those are Hover's own nameservers. To route traffic through Netlify's CDN, you either point the DNS records at Hover to Netlify's servers, or delegate the whole zone to Netlify's nameservers.
+The registrar controls **where DNS queries for your domain go** — specifically, which **nameservers** are authoritative for it. By default those are Hover's own nameservers. To route traffic through Netlify's CDN, you point the DNS records at Hover to Netlify's servers.
 
 ---
 
@@ -182,18 +305,15 @@ DNS (Domain Name System) is the phone book of the internet — it translates `al
 | `CNAME` | Maps a domain to another domain name (an alias) |
 | `NS` | Delegates a domain to specific nameservers |
 
-**The recommended setup for Netlify** is to point your Hover DNS to Netlify's nameservers (called "Netlify DNS"). This gives Netlify full control over the zone, which lets it provision SSL certificates faster and handle redirects more reliably.
+**Current DNS setup in Hover:**
 
-**How to do it:**
+| Type | Hostname | Value |
+|---|---|---|
+| `A` | `@` (root domain) | `75.2.60.5` (Netlify load balancer) |
+| `CNAME` | `www` | `alexandermervar.netlify.app` |
+| `CNAME` | `oscars` | `oscars-mervar-party.netlify.app` |
 
-1. In the Netlify dashboard → your site → **Domain management** → click **Add a domain** → type `alexandermervar.com`
-2. Netlify will show you its four nameservers (they look like `dns1.p01.nsone.net`)
-3. In Hover → your domain → **Edit Nameservers** → replace Hover's default nameservers with the four Netlify ones
-4. Wait up to 48 hours for DNS propagation (usually much faster — often under an hour)
-
-Once DNS propagates, Netlify automatically provisions an SSL certificate and the site is live at `https://alexandermervar.com`.
-
-**Alternatively** (if you want to keep DNS at Hover): you can add an `A` record pointing to Netlify's load balancer IP (`75.2.60.5`) instead of changing nameservers. Netlify documents both options under Domain management.
+The `oscars` record means `oscars.alexandermervar.com` resolves to the Oscars party site automatically — no extra work needed.
 
 **Good resources:**
 - [Netlify custom domains docs](https://docs.netlify.com/domains-https/custom-domains/)
@@ -212,10 +332,8 @@ alexandermervar.com/
 ├── src/
 │   ├── content.config.ts     # Schema definitions for blog + podcast collections
 │   ├── content/
-│   │   ├── blog/             # Blog posts as .md files
-│   │   │   └── hello-world.md
-│   │   └── podcast/          # Podcast episodes as .json files
-│   │       └── episode-1.json
+│   │   ├── blog/             # Blog posts as .md files  ← you work here
+│   │   └── podcast/          # Podcast episodes as .json files  ← and here
 │   ├── layouts/
 │   │   └── BaseLayout.astro  # Shared HTML shell (head, nav, footer, feed links)
 │   ├── pages/
@@ -230,90 +348,14 @@ alexandermervar.com/
 └── public/                   # Static assets (copied as-is into dist/)
     ├── favicon.ico
     ├── favicon.svg
-    └── styles/
-        └── global.css
-```
-
----
-
-## How to run it locally
-
-```bash
-cd ~/Projects/alexandermervar.com
-
-# First time only — install dependencies
-npm install
-
-# Start the dev server
-npm run dev
-```
-
-The site is available at `http://localhost:4321`. Changes to any file — pages, posts, styles — reload instantly in the browser.
-
----
-
-## How to write a blog post
-
-Create a new `.md` file in `src/content/blog/`. The filename becomes the URL path.
-
-```markdown
----
-title: "My New Post"
-description: "One sentence shown in listings and the RSS feed."
-pubDate: 2026-05-10
-tags: ["topic", "another-topic"]
-draft: false
----
-
-Post body in **markdown** goes here.
-```
-
-Set `draft: true` while writing — the post won't appear on the site or in the RSS feed until you flip it to `false`. Then commit and push; Netlify will pick it up automatically.
-
----
-
-## How to publish a podcast episode
-
-Create a new `.json` file in `src/content/podcast/`.
-
-```json
-{
-  "title": "Episode 2 — My Topic",
-  "description": "What this episode is about.",
-  "pubDate": "2026-05-10",
-  "audioUrl": "https://alexandermervar.com/podcast/episode-2.mp3",
-  "duration": "32:15",
-  "fileSize": 46137344
-}
-```
-
-`fileSize` is in bytes (right-click the MP3 → Get Info → size in bytes). `duration` is `HH:MM:SS` or `MM:SS`.
-
-For hosting audio files: either put MP3s in `public/podcast/` (simplest, fine for a small show), or use a dedicated file host like [Backblaze B2](https://www.backblaze.com/cloud-storage) or [Bunny.net](https://bunny.net) for larger files.
-
----
-
-## How deploys work
-
-```
-Edit a file locally
-       ↓
-git add . && git commit -m "message" && git push
-       ↓
-GitHub receives the push
-       ↓
-Netlify webhook fires automatically
-       ↓
-Netlify: npm install → npm run build → deploy dist/
-       ↓
-Site is live at https://alexandermervar.com (~60 seconds)
+    └── podcast/              # Put MP3s here if self-hosting audio
 ```
 
 ---
 
 ## Things to fill in
 
-Open `src/pages/podcast.xml.js` and update the constants at the top:
+Open `src/pages/podcast.xml.js` and update the constants at the top before submitting to Apple Podcasts or Spotify:
 
 | Constant | What it needs |
 |---|---|
@@ -322,5 +364,3 @@ Open `src/pages/podcast.xml.js` and update the constants at the top:
 | `PODCAST_EMAIL` | Contact email shown to Apple Podcasts (not publicly displayed) |
 | `PODCAST_IMAGE` | URL to your cover art — must be at least 1400×1400px JPEG or PNG |
 | `PODCAST_CATEGORY` | Pick from the [iTunes category list](https://podcasters.apple.com/support/1691-apple-podcasts-categories) |
-
-Also update the bio line in `src/pages/index.astro` and the `<meta name="description">` default in `src/layouts/BaseLayout.astro`.

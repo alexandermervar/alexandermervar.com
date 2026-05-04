@@ -2,10 +2,12 @@
 export interface Props {
   title: string;
   description?: string;
+  canonicalUrl?: string;
 }
 
-const { title, description = 'Personal site of Alexander Mervar' } = Astro.props;
+const { title, description = 'Writing about history, psychology, film, and whatever else is on my mind.', canonicalUrl } = Astro.props;
 const siteUrl = 'https://alexandermervar.com';
+const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
 ---
 
 <!DOCTYPE html>
@@ -14,7 +16,16 @@ const siteUrl = 'https://alexandermervar.com';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="author" content="Alexander Mervar" />
+
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Alexander Mervar" />
 
     <title>{title}</title>
 
@@ -29,12 +40,6 @@ const siteUrl = 'https://alexandermervar.com';
       type="application/rss+xml"
       title="Alexander Mervar — Blog"
       href={`${siteUrl}/rss.xml`}
-    />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="Alexander Mervar — Podcast"
-      href={`${siteUrl}/podcast.xml`}
     />
 
     <link rel="stylesheet" href="/styles/global.css" />
@@ -52,8 +57,7 @@ const siteUrl = 'https://alexandermervar.com';
         </nav>
       </header>
       <main id="main">
-
-      <slot />
+        <slot />
       </main>
 
       <footer>
@@ -63,8 +67,7 @@ const siteUrl = 'https://alexandermervar.com';
         </p>
         <p>
           &copy; {new Date().getFullYear()} Alexander Mervar &mdash;
-          <a href="/rss.xml">Blog RSS</a> &middot;
-          <a href="/podcast.xml">Podcast RSS</a>
+          <a href="/rss.xml">RSS</a>
         </p>
       </footer>
     </div>

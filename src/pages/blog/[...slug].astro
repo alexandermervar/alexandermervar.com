@@ -36,5 +36,11 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
     <Content />
   </article>
 
-  <p style="margin-top: 3rem;"><a href="/blog">&larr; All posts</a></p>
+  <p class="back-link"><a href="/blog">&larr; All posts</a></p>
 </BaseLayout>
+
+<style>
+  .back-link {
+    margin-top: 3rem;
+  }
+</style>

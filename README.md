@@ -1,12 +1,14 @@
 # alexandermervar.com
 
-My personal site — a blog and podcast feed built with [Astro](https://astro.build), deployed on [Netlify](https://netlify.com), served at a domain registered through [Hover](https://hover.com), and version-controlled here on GitHub.
+My personal site — a blog, projects page, and podcast feed built with [Astro](https://astro.build), deployed on [Netlify](https://netlify.com), served at a domain registered through [Hover](https://hover.com), and version-controlled here on GitHub.
+
+See `STYLE_GUIDE.md` for the visual design system.
 
 ---
 
 ## Things you'll do all the time
 
-These are the three things you'll do repeatedly. Everything else in this README is background knowledge.
+These are the things you'll do repeatedly. Everything else in this README is background knowledge.
 
 ---
 
@@ -52,13 +54,27 @@ Regular paragraph text. **Bold**, *italic*, `inline code`.
 
 [Link text](https://example.com)
 
+![Image alt text](/images/my-photo.jpg)
+
 - Bullet one
 - Bullet two
 
 > Blockquote
 
+Footnote in text.[^1]
+
+[^1]: The footnote content, rendered at the bottom of the post.
+
 ---   ← horizontal rule
 ```
+
+Put images in `public/images/` and reference them as `/images/filename.jpg`. Footnotes work out of the box with the `[^1]` syntax — they auto-number and link back and forth.
+
+---
+
+### Add or update a project
+
+Edit `src/pages/projects.astro` directly. The file is plain HTML-in-Astro — copy an existing `<li>` block, update the link, title, and description. Push to deploy.
 
 ---
 
@@ -91,21 +107,19 @@ git commit -m "podcast: episode 2"
 git push
 ```
 
-The podcast feed at `/podcast.xml` updates automatically on the next deploy.
-
 ---
 
 ### Deploy (how pushing works)
 
 Every `git push` to `main` triggers a Netlify rebuild. You don't do anything else.
 
-```
+```bash
 git add .
 git commit -m "describe what you changed"
 git push
 ```
 
-That's it. Watch it build at [app.netlify.com](https://app.netlify.com) if you're curious. Live in ~60 seconds.
+Watch it build at [app.netlify.com](https://app.netlify.com) if you're curious. Live in ~60 seconds.
 
 ---
 
@@ -127,7 +141,7 @@ Open `http://localhost:4321`. Changes you make to any file reload instantly.
 
 ## The rest — what everything is and why
 
-The sections below explain the full stack in detail. You don't need to read them to use the site, but they're here so you understand what's actually happening.
+The sections below explain the full stack in detail. You don't need to read them to use the site.
 
 ---
 
@@ -152,7 +166,9 @@ The sections below explain the full stack in detail. You don't need to read them
 
 A minimal personal site with:
 
+- A **home page** at `/`
 - A **blog** at `/blog` — markdown files that get turned into HTML pages at build time
+- A **projects page** at `/projects` — a hand-edited list of public work and repos
 - An **RSS feed** at `/rss.xml` — a machine-readable list of blog posts that RSS readers (like [NetNewsWire](https://netnewswire.com) or [Feedly](https://feedly.com)) can subscribe to
 - A **podcast feed** at `/podcast.xml` — an iTunes-compatible RSS feed that podcast apps (like [Overcast](https://overcast.fm) or [Pocket Casts](https://pocketcasts.com)) can subscribe to
 - Zero client-side JavaScript — everything is plain HTML and CSS, generated ahead of time at build
@@ -313,7 +329,7 @@ DNS (Domain Name System) is the phone book of the internet — it translates `al
 | `CNAME` | `www` | `alexandermervar.netlify.app` |
 | `CNAME` | `oscars` | `oscars-mervar-party.netlify.app` |
 
-The `oscars` record means `oscars.alexandermervar.com` resolves to the Oscars party site automatically — no extra work needed.
+The `oscars` record means `oscars.alexandermervar.com` resolves to the Oscars party site automatically.
 
 **Good resources:**
 - [Netlify custom domains docs](https://docs.netlify.com/domains-https/custom-domains/)
@@ -329,6 +345,7 @@ alexandermervar.com/
 ├── astro.config.mjs          # Astro config (site URL, output mode)
 ├── netlify.toml              # Netlify build settings
 ├── package.json              # npm dependencies and scripts
+├── STYLE_GUIDE.md            # Visual design system reference
 ├── src/
 │   ├── content.config.ts     # Schema definitions for blog + podcast collections
 │   ├── content/
@@ -341,14 +358,21 @@ alexandermervar.com/
 │   │   ├── blog/
 │   │   │   ├── index.astro      # Blog listing page (/blog)
 │   │   │   └── [...slug].astro  # Individual post pages (/blog/post-name)
+│   │   ├── projects.astro       # Projects page (/projects)
 │   │   ├── rss.xml.js           # Blog RSS feed (/rss.xml)
 │   │   └── podcast.xml.js       # Podcast RSS feed (/podcast.xml)
 │   └── styles/
-│       └── global.css           # Site-wide stylesheet
+│       └── global.css           # Site-wide stylesheet (mirrors public/styles/)
 └── public/                   # Static assets (copied as-is into dist/)
     ├── favicon.ico
-    ├── favicon.svg
-    └── podcast/              # Put MP3s here if self-hosting audio
+    ├── favicon-16x16.png
+    ├── favicon-32x32.png
+    ├── apple-touch-icon.png
+    ├── android-chrome-192x192.png
+    ├── android-chrome-512x512.png
+    ├── podcast/              # Put MP3s here if self-hosting audio
+    └── styles/
+        └── global.css        # The stylesheet served to browsers
 ```
 
 ---

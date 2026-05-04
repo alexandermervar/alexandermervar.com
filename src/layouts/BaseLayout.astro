@@ -1,0 +1,59 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Personal site of Alexander Mervar' } = Astro.props;
+const siteUrl = 'https://alexandermervar.com';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- RSS autodiscovery -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Alexander Mervar — Blog"
+      href={`${siteUrl}/rss.xml`}
+    />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Alexander Mervar — Podcast"
+      href={`${siteUrl}/podcast.xml`}
+    />
+
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
+
+      <slot />
+
+      <footer>
+        <p>
+          &copy; {new Date().getFullYear()} Alexander Mervar &mdash;
+          <a href="/rss.xml">Blog RSS</a> &middot;
+          <a href="/podcast.xml">Podcast RSS</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

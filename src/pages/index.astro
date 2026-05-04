@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+---
+
+<BaseLayout title="Alexander Mervar" description="Personal site of Alexander Mervar">
+  <h1>Alexander Mervar</h1>
+  <p>Developer, writer, and curious person.</p>
+
+  {posts.length > 0 && (
+    <>
+      <h2>Recent posts</h2>
+      <ul class="post-list">
+        {posts.map(post => (
+          <li>
+            <p class="post-meta">
+              {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+            <p class="post-title">
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </p>
+            <p class="post-description">{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+      <p><a href="/blog">All posts &rarr;</a></p>
+    </>
+  )}
+</BaseLayout>

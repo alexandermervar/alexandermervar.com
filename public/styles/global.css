@@ -301,6 +301,106 @@ footer a:hover {
 }
 
 /* -----------------------------------------------
+   Home page — two-column layout
+----------------------------------------------- */
+.container--home {
+  max-width: 920px;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 210px;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+/* Sidebar — Mastodon widget */
+.sidebar {
+  border-top: 3px solid var(--ink);
+  padding-top: 0.75rem;
+}
+
+.sidebar-label {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: 0 0 0.75rem;
+}
+
+.sidebar-posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-posts li {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sidebar-posts li:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.sidebar-date {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  margin: 0 0 0.2rem;
+  letter-spacing: 0.01em;
+}
+
+.sidebar-text {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--ink);
+  line-height: 1.5;
+  margin: 0 0 0.3rem;
+  /* Clamp to 4 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sidebar-link {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+
+.sidebar-footer {
+  margin-top: 0.6rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.sidebar-loading,
+.sidebar-empty {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  font-style: italic;
+  padding: 0.5rem 0;
+}
+
+/* Stack on narrow screens */
+@media (max-width: 680px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sidebar {
+    margin-top: 2.5rem;
+  }
+}
+
+/* -----------------------------------------------
    Responsive
 ----------------------------------------------- */
 @media (max-width: 480px) {

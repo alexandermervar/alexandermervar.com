@@ -1,106 +1,115 @@
 ---
-// MastodonFeed.astro
-// Fetches the last few public posts from a Mastodon account client-side.
-// Uses the public Mastodon API — no auth token required for public accounts.
-const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 3 } = Astro.props;
+// MastodonFeed.astro — compact sidebar widget
+const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.props;
 ---
 
-<section class="mastodon-feed" aria-label="Recent Mastodon posts">
-  <h2>
-    On Mastodon
-    <a
-      href={`https://${instance}/@${username}`}
-      target="_blank"
-      rel="me noopener"
-      class="mastodon-profile-link"
-      aria-label={`@${username}@${instance} on Mastodon`}
-    >@{username}@{instance}</a>
-  </h2>
-  <ul class="post-list" id="mastodon-posts">
-    <li class="mastodon-loading">Loading…</li>
+<aside class="sidebar" aria-label="Recent Mastodon posts">
+  <p class="sidebar-label">On Mastodon</p>
+  <ul class="sidebar-posts" id="mastodon-posts">
+    <li class="sidebar-loading">Loading…</li>
   </ul>
-</section>
+  <p class="sidebar-footer">
+    <a href={`https://${instance}/@${username}`} target="_blank" rel="me noopener">
+      @{username}@{instance} &rarr;
+    </a>
+  </p>
+</aside>
 
 <script define:vars={{ instance, username, limit }}>
   (async () => {
     const list = document.getElementById('mastodon-posts');
     if (!list) return;
 
+    // Extract a YouTube video ID from a string if present
+    function youtubeId(text) {
+      const m = text.match(
+        /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/
+      );
+      return m ? m[1] : null;
+    }
+
+    // Strip HTML, returning plain text
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      div.querySelectorAll('br').forEach(el => el.replaceWith('\n'));
+      div.querySelectorAll('p').forEach(el => el.after('\n'));
+      return div.textContent.trim();
+    }
+
     try {
-      // Step 1: resolve account id (public endpoint, no auth)
       const lookupRes = await fetch(
         `https://${instance}/api/v1/accounts/lookup?acct=${username}`
       );
-      if (!lookupRes.ok) throw new Error('lookup failed');
-      const account = await lookupRes.json();
+      if (!lookupRes.ok) throw new Error();
+      const { id } = await lookupRes.json();
 
-      // Step 2: fetch recent statuses
       const statusRes = await fetch(
-        `https://${instance}/api/v1/accounts/${account.id}/statuses` +
+        `https://${instance}/api/v1/accounts/${id}/statuses` +
         `?limit=${limit}&exclude_replies=true&exclude_reblogs=true`
       );
-      if (!statusRes.ok) throw new Error('statuses failed');
+      if (!statusRes.ok) throw new Error();
       const statuses = await statusRes.json();
 
       if (!statuses.length) {
-        list.innerHTML = '<li class="mastodon-empty">No recent posts.</li>';
+        list.innerHTML = '<li class="sidebar-empty">No recent posts.</li>';
         return;
       }
 
       list.innerHTML = statuses.map(s => {
-        // Strip HTML tags from content for clean text
-        const tmp = document.createElement('div');
-        tmp.innerHTML = s.content;
-        // Convert <br> / <p> to newlines before stripping
-        tmp.querySelectorAll('br').forEach(el => el.replaceWith('\n'));
-        tmp.querySelectorAll('p').forEach(el => {
-          el.after('\n');
+        const text = stripHtml(s.content);
+        const date = new Date(s.created_at).toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric'
         });
-        const text = tmp.textContent.trim();
 
-        const date = new Date(s.created_at);
-        const dateStr = date.toLocaleDateString('en-US', {
-          year: 'numeric', month: 'long', day: 'numeric'
-        });
+        // Check for a YouTube link in both the post text and any card attached
+        const fullText = text + ' ' + (s.card?.url || '');
+        const ytId = youtubeId(fullText);
+
+        const ytEmbed = ytId
+          ? `<div class="sidebar-yt">
+               <a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" rel="noopener">
+                 <img
+                   src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg"
+                   alt="YouTube video"
+                   loading="lazy"
+                   width="320" height="180"
+                   class="sidebar-yt-thumb"
+                 />
+               </a>
+             </div>`
+          : '';
 
         return `
           <li>
-            <p class="post-meta">${dateStr}</p>
-            <p class="post-description mastodon-content">${text}</p>
-            <p class="post-meta">
-              <a href="${s.url}" target="_blank" rel="noopener">View on Mastodon &rarr;</a>
-            </p>
+            <p class="sidebar-date">${date}</p>
+            <p class="sidebar-text">${text}</p>
+            ${ytEmbed}
+            <a class="sidebar-link" href="${s.url}" target="_blank" rel="noopener">View post &rarr;</a>
           </li>
         `;
       }).join('');
+
     } catch {
       list.innerHTML =
-        `<li class="mastodon-empty">Couldn't load posts right now. ` +
-        `<a href="https://${instance}/@${username}" target="_blank" rel="noopener">` +
-        `See them on Mastodon &rarr;</a></li>`;
+        `<li class="sidebar-empty">
+           <a href="https://${instance}/@${username}" target="_blank" rel="noopener">
+             See posts on Mastodon &rarr;
+           </a>
+         </li>`;
     }
   })();
 </script>
 
 <style>
-  .mastodon-feed {
-    margin-top: 2rem;
+  .sidebar-yt {
+    margin: 0.4rem 0 0.3rem;
   }
 
-  .mastodon-profile-link {
-    font-size: 0.85em;
-    font-weight: normal;
-    margin-left: 0.5rem;
-    opacity: 0.65;
-  }
-
-  .mastodon-loading,
-  .mastodon-empty {
-    opacity: 0.55;
-    font-style: italic;
-  }
-
-  .mastodon-content {
-    white-space: pre-line;
+  .sidebar-yt-thumb {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--rule);
   }
 </style>

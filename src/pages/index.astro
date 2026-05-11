@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import MastodonFeed from '../components/MastodonFeed.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -34,4 +35,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <p><a href="/blog">All posts &rarr;</a></p>
     </>
   )}
+
+  <MastodonFeed />
 </BaseLayout>

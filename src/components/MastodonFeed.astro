@@ -1,0 +1,106 @@
+---
+// MastodonFeed.astro
+// Fetches the last few public posts from a Mastodon account client-side.
+// Uses the public Mastodon API — no auth token required for public accounts.
+const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 3 } = Astro.props;
+---
+
+<section class="mastodon-feed" aria-label="Recent Mastodon posts">
+  <h2>
+    On Mastodon
+    <a
+      href={`https://${instance}/@${username}`}
+      target="_blank"
+      rel="me noopener"
+      class="mastodon-profile-link"
+      aria-label={`@${username}@${instance} on Mastodon`}
+    >@{username}@{instance}</a>
+  </h2>
+  <ul class="post-list" id="mastodon-posts">
+    <li class="mastodon-loading">Loading…</li>
+  </ul>
+</section>
+
+<script define:vars={{ instance, username, limit }}>
+  (async () => {
+    const list = document.getElementById('mastodon-posts');
+    if (!list) return;
+
+    try {
+      // Step 1: resolve account id (public endpoint, no auth)
+      const lookupRes = await fetch(
+        `https://${instance}/api/v1/accounts/lookup?acct=${username}`
+      );
+      if (!lookupRes.ok) throw new Error('lookup failed');
+      const account = await lookupRes.json();
+
+      // Step 2: fetch recent statuses
+      const statusRes = await fetch(
+        `https://${instance}/api/v1/accounts/${account.id}/statuses` +
+        `?limit=${limit}&exclude_replies=true&exclude_reblogs=true`
+      );
+      if (!statusRes.ok) throw new Error('statuses failed');
+      const statuses = await statusRes.json();
+
+      if (!statuses.length) {
+        list.innerHTML = '<li class="mastodon-empty">No recent posts.</li>';
+        return;
+      }
+
+      list.innerHTML = statuses.map(s => {
+        // Strip HTML tags from content for clean text
+        const tmp = document.createElement('div');
+        tmp.innerHTML = s.content;
+        // Convert <br> / <p> to newlines before stripping
+        tmp.querySelectorAll('br').forEach(el => el.replaceWith('\n'));
+        tmp.querySelectorAll('p').forEach(el => {
+          el.after('\n');
+        });
+        const text = tmp.textContent.trim();
+
+        const date = new Date(s.created_at);
+        const dateStr = date.toLocaleDateString('en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        return `
+          <li>
+            <p class="post-meta">${dateStr}</p>
+            <p class="post-description mastodon-content">${text}</p>
+            <p class="post-meta">
+              <a href="${s.url}" target="_blank" rel="noopener">View on Mastodon &rarr;</a>
+            </p>
+          </li>
+        `;
+      }).join('');
+    } catch {
+      list.innerHTML =
+        `<li class="mastodon-empty">Couldn't load posts right now. ` +
+        `<a href="https://${instance}/@${username}" target="_blank" rel="noopener">` +
+        `See them on Mastodon &rarr;</a></li>`;
+    }
+  })();
+</script>
+
+<style>
+  .mastodon-feed {
+    margin-top: 2rem;
+  }
+
+  .mastodon-profile-link {
+    font-size: 0.85em;
+    font-weight: normal;
+    margin-left: 0.5rem;
+    opacity: 0.65;
+  }
+
+  .mastodon-loading,
+  .mastodon-empty {
+    opacity: 0.55;
+    font-style: italic;
+  }
+
+  .mastodon-content {
+    white-space: pre-line;
+  }
+</style>

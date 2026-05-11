@@ -26,6 +26,8 @@ const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Alexander Mervar" />
+    <meta property="og:image" content={`${siteUrl}/images/about.jpg`} />
+    <meta property="og:image:alt" content="Alexander Mervar" />
 
     <title>{title}</title>
 

@@ -316,8 +316,13 @@ footer a:hover {
 
 /* Sidebar — Mastodon widget */
 .sidebar {
+  /* Box treatment: thick top rule (matches site header/footer), thin border elsewhere */
+  border: 1px solid var(--rule);
   border-top: 3px solid var(--ink);
-  padding-top: 0.75rem;
+  padding: 0.85rem 0.9rem 0.8rem;
+  /* Stick to viewport as the post list scrolls past */
+  position: sticky;
+  top: 1.5rem;
 }
 
 .sidebar-label {
@@ -359,7 +364,6 @@ footer a:hover {
   color: var(--ink);
   line-height: 1.5;
   margin: 0 0 0.3rem;
-  /* Clamp to 4 lines */
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -373,9 +377,11 @@ footer a:hover {
 }
 
 .sidebar-footer {
-  margin-top: 0.6rem;
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--rule);
   font-family: var(--font-ui);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--ink-muted);
 }
 
@@ -388,6 +394,19 @@ footer a:hover {
   padding: 0.5rem 0;
 }
 
+/* YouTube thumbnail — defined here (not in component <style>) so it applies
+   to elements injected via innerHTML at runtime */
+.sidebar-yt {
+  margin: 0.4rem 0 0.3rem;
+}
+
+.sidebar-yt-thumb {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--rule);
+}
+
 /* Stack on narrow screens */
 @media (max-width: 680px) {
   .home-grid {
@@ -396,6 +415,7 @@ footer a:hover {
   }
 
   .sidebar {
+    position: static; /* no sticky on mobile — it stacks below the posts */
     margin-top: 2.5rem;
   }
 }

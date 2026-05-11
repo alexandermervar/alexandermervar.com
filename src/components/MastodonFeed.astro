@@ -1,5 +1,7 @@
 ---
 // MastodonFeed.astro — compact sidebar widget
+// Styles live entirely in global.css (sidebar-* classes) so they apply to
+// elements injected via innerHTML at runtime — Astro scoped CSS can't reach those.
 const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.props;
 ---
 
@@ -20,7 +22,7 @@ const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.p
     const list = document.getElementById('mastodon-posts');
     if (!list) return;
 
-    // Extract a YouTube video ID from a string if present
+    /** Return a YouTube video ID if the string contains a YouTube URL, else null. */
     function youtubeId(text) {
       const m = text.match(
         /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/
@@ -28,7 +30,7 @@ const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.p
       return m ? m[1] : null;
     }
 
-    // Strip HTML, returning plain text
+    /** Strip HTML tags, converting <br>/<p> to newlines first. */
     function stripHtml(html) {
       const div = document.createElement('div');
       div.innerHTML = html;
@@ -37,18 +39,30 @@ const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.p
       return div.textContent.trim();
     }
 
+    /**
+     * Validate that a URL is safe to use as an href — must be https.
+     * Prevents a malicious server response from injecting javascript: URLs.
+     */
+    function safeUrl(url) {
+      try {
+        return new URL(url).protocol === 'https:' ? url : null;
+      } catch {
+        return null;
+      }
+    }
+
     try {
       const lookupRes = await fetch(
         `https://${instance}/api/v1/accounts/lookup?acct=${username}`
       );
-      if (!lookupRes.ok) throw new Error();
+      if (!lookupRes.ok) throw new Error('lookup failed');
       const { id } = await lookupRes.json();
 
       const statusRes = await fetch(
         `https://${instance}/api/v1/accounts/${id}/statuses` +
         `?limit=${limit}&exclude_replies=true&exclude_reblogs=true`
       );
-      if (!statusRes.ok) throw new Error();
+      if (!statusRes.ok) throw new Error('statuses failed');
       const statuses = await statusRes.json();
 
       if (!statuses.length) {
@@ -57,23 +71,26 @@ const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.p
       }
 
       list.innerHTML = statuses.map(s => {
+        const postUrl = safeUrl(s.url);
+        if (!postUrl) return ''; // skip if URL is not safe
+
         const text = stripHtml(s.content);
         const date = new Date(s.created_at).toLocaleDateString('en-US', {
           month: 'short', day: 'numeric'
         });
 
-        // Check for a YouTube link in both the post text and any card attached
-        const fullText = text + ' ' + (s.card?.url || '');
-        const ytId = youtubeId(fullText);
+        // Check for a YouTube link in the post text or its attached card URL
+        const ytId = youtubeId(text + ' ' + (s.card?.url || ''));
 
         const ytEmbed = ytId
           ? `<div class="sidebar-yt">
                <a href="https://www.youtube.com/watch?v=${ytId}" target="_blank" rel="noopener">
                  <img
                    src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg"
-                   alt="YouTube video"
+                   alt="YouTube video thumbnail"
                    loading="lazy"
-                   width="320" height="180"
+                   width="320"
+                   height="180"
                    class="sidebar-yt-thumb"
                  />
                </a>
@@ -85,7 +102,7 @@ const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.p
             <p class="sidebar-date">${date}</p>
             <p class="sidebar-text">${text}</p>
             ${ytEmbed}
-            <a class="sidebar-link" href="${s.url}" target="_blank" rel="noopener">View post &rarr;</a>
+            <a class="sidebar-link" href="${postUrl}" target="_blank" rel="noopener">View post &rarr;</a>
           </li>
         `;
       }).join('');
@@ -100,16 +117,3 @@ const { instance = 'hachyderm.io', username = 'macDoofOS', limit = 4 } = Astro.p
     }
   })();
 </script>
-
-<style>
-  .sidebar-yt {
-    margin: 0.4rem 0 0.3rem;
-  }
-
-  .sidebar-yt-thumb {
-    width: 100%;
-    height: auto;
-    display: block;
-    border: 1px solid var(--rule);
-  }
-</style>

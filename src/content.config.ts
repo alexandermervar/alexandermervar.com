@@ -12,16 +12,4 @@ const blog = defineCollection({
   }),
 });
 
-const podcast = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/podcast' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    audioUrl: z.string().url(),
-    duration: z.string(), // e.g. "45:30" (HH:MM:SS or MM:SS)
-    fileSize: z.number(), // bytes
-  }),
-});
-
-export const collections = { blog, podcast };
+export const collections = { blog };

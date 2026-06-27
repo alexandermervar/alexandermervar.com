@@ -6,8 +6,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="Blog — Alexander Mervar" description="Writing by Alexander Mervar">
+<BaseLayout title="Blog — Alexander Mervar" description="Essays and film criticism by Alexander Mervar.">
   <h1>Blog</h1>
+
+  <p>Essays, criticism, and the occasional longer thought.</p>
 
   {posts.length === 0 ? (
     <p>No posts yet. Check back soon.</p>

@@ -10,12 +10,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 <BaseLayout
   title="Alexander Mervar"
-  description="Writing about history, psychology, film, and whatever else is on my mind."
+  description="Alexander Mervar — essays and film criticism, published independently."
   containerClass="container--home"
 >
   <h1>Alexander Mervar</h1>
-  <p>Writing about history, psychology, film, and whatever else I'm thinking about.</p>
+  <p class="lede">I write essays and film criticism. This is where it's published — independently, for the people who want to read it.</p>
   <p class="post-meta">
+    <a href="/subscribe">Subscribe</a> &middot;
     <a href="https://letterboxd.com/macDoofOS/" rel="me noopener" target="_blank">Letterboxd</a> &middot;
     <a href="https://hachyderm.io/@macDoofOS" rel="me noopener" target="_blank">Mastodon</a>
   </p>
@@ -24,7 +25,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     <div class="home-main">
       {posts.length > 0 && (
         <>
-          <h2>Recent posts</h2>
+          <h2>Recent writing</h2>
           <ul class="post-list">
             {posts.map(post => (
               <li>
@@ -38,7 +39,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               </li>
             ))}
           </ul>
-          <p><a href="/blog">All posts &rarr;</a></p>
+          <p><a href="/blog">All writing &rarr;</a></p>
         </>
       )}
     </div>
@@ -46,3 +47,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     <MastodonFeed />
   </div>
 </BaseLayout>
+
+<style>
+  .lede {
+    font-size: 1.12rem;
+    color: var(--ink);
+    max-width: 36rem;
+  }
+</style>
